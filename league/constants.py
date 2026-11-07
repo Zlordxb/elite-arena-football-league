@@ -16,6 +16,27 @@ class MatchStatus:
     ALL = (UPCOMING, LIVE, FINISHED)
 
 
+class MatchResult:
+    """Outcome of a finished match from one team's point of view."""
+
+    WIN = "W"
+    DRAW = "D"
+    LOSS = "L"
+
+    ALL = (WIN, DRAW, LOSS)
+
+
+class SeasonPhase:
+    """Where the tournament is in its life."""
+
+    SETUP = "Setup"               # fewer than two active teams registered
+    READY = "Ready"               # enough teams, schedule not generated yet
+    IN_PROGRESS = "In progress"   # schedule exists, matches still to play
+    COMPLETE = "Complete"         # every fixture finished
+
+    ALL = (SETUP, READY, IN_PROGRESS, COMPLETE)
+
+
 class CardType:
     """Disciplinary cards that can be shown during a football match."""
 
@@ -41,6 +62,12 @@ POINTS_FOR_DRAW = 1
 POINTS_FOR_LOSS = 0
 
 YELLOW_CARDS_FOR_SEND_OFF = 2
+
+# A card can be recorded from the 1st minute up to the end of extra time.
+MAX_MATCH_MINUTE = 120
+
+# How many recent results make up a team's form guide.
+FORM_GUIDE_LENGTH = 5
 
 MIN_TOURNAMENT_NAME_LENGTH = 3
 MIN_TEAMS_FOR_SCHEDULE = 2
