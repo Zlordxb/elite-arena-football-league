@@ -1,0 +1,63 @@
+# Elite Arena theme: night-stadium navy, trophy gold, pitch green for "live".
+# Native widgets (inputs, tables, buttons) pick these up; ui/styles.py adds the rest.
+
+[theme]
+base = "dark"
+primaryColor = "#e9b949"
+backgroundColor = "#0b1626"
+secondaryBackgroundColor = "#13263a"
+textColor = "#eef3f8"
+linkColor = "#f3cf6e"
+borderColor = "#243b55"
+dataframeBorderColor = "#243b55"
+baseRadius = "10px"
+buttonRadius = "8px"
+font = "Barlow, sans-serif"
+headingFont = "Barlow Condensed, sans-serif"
+chartCategoricalColors = ["#3987e5", "#d95926", "#199e70", "#c98500", "#d55181", "#008300", "#9085e9", "#e66767"]
+
+[[theme.fontFaces]]
+family = "Barlow"
+url = "https://fonts.gstatic.com/s/barlow/v13/7cHpv4kjgoGqM7E_DMs5.woff2"
+weight = 400
+
+[[theme.fontFaces]]
+family = "Barlow"
+url = "https://fonts.gstatic.com/s/barlow/v13/7cHqv4kjgoGqM7E3_-gs51os.woff2"
+weight = 500
+
+[[theme.fontFaces]]
+family = "Barlow"
+url = "https://fonts.gstatic.com/s/barlow/v13/7cHqv4kjgoGqM7E30-8s51os.woff2"
+weight = 600
+
+[[theme.fontFaces]]
+family = "Barlow"
+url = "https://fonts.gstatic.com/s/barlow/v13/7cHqv4kjgoGqM7E3t-4s51os.woff2"
+weight = 700
+
+[[theme.fontFaces]]
+family = "Barlow Condensed"
+url = "https://fonts.gstatic.com/s/barlowcondensed/v13/HTxwL3I-JCGChYJ8VI-L6OO_au7B4-Lwz3bWuQ.woff2"
+weight = 500
+
+[[theme.fontFaces]]
+family = "Barlow Condensed"
+url = "https://fonts.gstatic.com/s/barlowcondensed/v13/HTxwL3I-JCGChYJ8VI-L6OO_au7B4873z3bWuQ.woff2"
+weight = 600
+
+[[theme.fontFaces]]
+family = "Barlow Condensed"
+url = "https://fonts.gstatic.com/s/barlowcondensed/v13/HTxwL3I-JCGChYJ8VI-L6OO_au7B46r2z3bWuQ.woff2"
+weight = 700
+
+[theme.sidebar]
+backgroundColor = "#0d1b2d"
+secondaryBackgroundColor = "#1a3148"
+borderColor = "#243b55"
+
+[client]
+toolbarMode = "minimal"
+
+[browser]
+gatherUsageStats = false
