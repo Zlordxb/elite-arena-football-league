@@ -71,3 +71,17 @@ def validate_score(value, label="Score"):
         raise ValueError(f"{label} must be a non-negative integer.")
 
     return value
+
+
+def validate_minute(value, max_minute, label="Minute"):
+    """Accept None (unknown) or an integer between 1 and `max_minute`."""
+    if value is None:
+        return None
+
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise ValueError(f"{label} must be a whole number of minutes.")
+
+    if not 1 <= value <= max_minute:
+        raise ValueError(f"{label} must be between 1 and {max_minute}.")
+
+    return value

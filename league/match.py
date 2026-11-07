@@ -2,12 +2,15 @@
 4. MATCH
 
 Abstract base for a fixture between two teams.
-Enforces the lifecycle Upcoming -> Live -> Finished and score validation.
+Enforces the lifecycle Upcoming -> Live -> Finished and score validation,
+and keeps its own event log (kick-off, full time, ...).
 """
 
 from abc import ABC, abstractmethod
+from datetime import datetime
 
-from .constants import MatchStatus
+from .constants import MatchResult, MatchStatus
+from .events import EventLog, EventType
 from .team import Team
 from .validators import validate_id, validate_score
 
@@ -29,6 +32,12 @@ class Match(ABC):
         self.score = None
         self.status = MatchStatus.UPCOMING
 
+        # History
+        self.matchday = None        # set by Tournament.generate_schedule
+        self.started_at = None
+        self.finished_at = None
+        self.events = EventLog()
+
     # ------------------------------------------------------------------ #
     # Lifecycle
     # ------------------------------------------------------------------ #
@@ -40,6 +49,13 @@ class Match(ABC):
             raise RuntimeError("Both teams must be active.")
 
         self.status = MatchStatus.LIVE
+        self.started_at = datetime.now()
+        self.events.record(
+            EventType.MATCH_STARTED,
+            f"Kick-off: {self.team1.name} vs {self.team2.name}.",
+            match_id=self.match_id,
+            matchday=self.matchday,
+        )
 
     def finish_match(self, team1_score, team2_score):
         if not self.is_live:
@@ -50,6 +66,15 @@ class Match(ABC):
 
         self.score = (team1_score, team2_score)
         self.status = MatchStatus.FINISHED
+        self.finished_at = datetime.now()
+        self.events.record(
+            EventType.MATCH_FINISHED,
+            f"Full time: {self.team1.name} {team1_score} - {team2_score} "
+            f"{self.team2.name}.",
+            match_id=self.match_id,
+            matchday=self.matchday,
+            score=f"{team1_score}-{team2_score}",
+        )
 
     # ------------------------------------------------------------------ #
     # Queries
@@ -73,6 +98,40 @@ class Match(ABC):
     def involves(self, team):
         return team is self.team1 or team is self.team2
 
+    def opponent_of(self, team):
+        if team is self.team1:
+            return self.team2
+        if team is self.team2:
+            return self.team1
+        raise ValueError("Team is not playing in this match.")
+
+    def goals_for(self, team):
+        if not self.is_finished:
+            return None
+        return self.score[0] if team is self.team1 else self.score[1]
+
+    def goals_against(self, team):
+        if not self.is_finished:
+            return None
+        return self.score[1] if team is self.team1 else self.score[0]
+
+    def result_for(self, team):
+        """'W', 'D' or 'L' for `team`; None while the match is unfinished."""
+        if not self.is_finished:
+            return None
+
+        if not self.involves(team):
+            raise ValueError("Team is not playing in this match.")
+
+        goals_for = self.goals_for(team)
+        goals_against = self.goals_against(team)
+
+        if goals_for > goals_against:
+            return MatchResult.WIN
+        if goals_for < goals_against:
+            return MatchResult.LOSS
+        return MatchResult.DRAW
+
     @property
     def winner(self):
         """Winning Team, or None for a draw / unfinished match."""
@@ -86,6 +145,10 @@ class Match(ABC):
         if score2 > score1:
             return self.team2
         return None
+
+    @property
+    def total_goals(self):
+        return sum(self.score) if self.is_finished else 0
 
     def get_result(self):
         if not self.is_finished:
